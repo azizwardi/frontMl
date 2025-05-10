@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Project Delay Prediction{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Welcome, {{ username }}!</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Your Dashboard</h5>
+                <p class="card-text">From here you can access all the features of the Project Delay Prediction tool.</p>
+
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Make a Prediction</h5>
+                                <p class="card-text">Predict if your project will be delayed based on its characteristics.</p>
+                                <a href="{{ url_for('prediction') }}" class="btn btn-primary">Go to Prediction</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Prediction History</h5>
+                                <p class="card-text">View your past predictions and their results.</p>
+                                <a href="{{ url_for('history') }}" class="btn btn-success">View History</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Team Recommendations</h5>
+                                <p class="card-text">Get team workload optimization recommendations for your project.</p>
+                                <a href="{{ url_for('recommend') }}" class="btn btn-info">Get Recommendations</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Task Prioritization</h5>
+                                <p class="card-text">Prioritize your tasks based on urgency and importance.</p>
+                                <a href="{{ url_for('segment') }}" class="btn btn-warning">Prioritize Tasks</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Recommendation History</h5>
+                                <p class="card-text">View your past team recommendations.</p>
+                                <a href="{{ url_for('recommendation_history') }}" class="btn btn-secondary">View History</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Prioritization History</h5>
+                                <p class="card-text">View your past task prioritizations.</p>
+                                <a href="{{ url_for('segmentation_history') }}" class="btn btn-secondary">View History</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">About Our Models</h5>
+                                <p class="card-text">Our platform uses three advanced models:</p>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h6>Delay Prediction Model</h6>
+                                        <ul>
+                                            <li>Project Type</li>
+                                            <li>Priority</li>
+                                            <li>Hours Spent</li>
+                                            <li>Progress Percentage</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Team Workload Optimization</h6>
+                                        <ul>
+                                            <li>Team Member Skills</li>
+                                            <li>Current Workload</li>
+                                            <li>Project Requirements</li>
+                                            <li>Experience Level</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Task Prioritization</h6>
+                                        <ul>
+                                            <li>Task Category</li>
+                                            <li>Current Priority</li>
+                                            <li>Deadline</li>
+                                            <li>Estimated Hours</li>
+                                            <li>Complexity</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

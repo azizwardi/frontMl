@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction History - Project Delay Prediction{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Prediction History</h4>
+            </div>
+            <div class="card-body">
+                {% if predictions %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date & Time</th>
+                                    <th>Result</th>
+                                    <th>Delay Risk</th>
+                                    <th>Project Type</th>
+                                    <th>Priority</th>
+                                    <th>Hours Spent</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prediction in predictions %}
+                                <tr class="{% if prediction.result == 'Delayed' %}table-danger{% else %}table-success{% endif %}">
+                                    <td>{{ prediction.id }}</td>
+                                    <td>{{ prediction.timestamp }}</td>
+                                    <td><strong>{{ prediction.result }}</strong></td>
+                                    <td>
+                                        {% if prediction.probability is defined and prediction.probability is not none %}
+                                            <div class="d-flex align-items-center">
+                                                <span class="me-2">{{ (prediction.probability * 100) | round(1) }}%</span>
+                                                <div class="progress flex-grow-1" style="height: 8px;">
+                                                    <div class="progress-bar {% if prediction.probability > 0.5 %}bg-danger{% elif prediction.probability > 0.25 %}bg-warning{% else %}bg-success{% endif %}"
+                                                         style="width: {{ (prediction.probability * 100) | round(1) }}%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ prediction.input_data['Project Type'] }}</td>
+                                    <td>{{ prediction.input_data['Priority'] }}</td>
+                                    <td>{{ prediction.input_data['Hours Spent'] }}</td>
+                                    <td>{{ prediction.input_data['Progress'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">No predictions yet</h5>
+                        <p>You haven't made any predictions yet. Go to the prediction page to make your first prediction.</p>
+                        <hr>
+                        <a href="{{ url_for('prediction') }}" class="btn btn-primary">Make a Prediction</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                <a href="{{ url_for('prediction') }}" class="btn btn-primary float-end">Make New Prediction</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

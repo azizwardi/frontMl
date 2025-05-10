@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Recommendation History - Project Delay Prediction{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Team Recommendation History</h4>
+            </div>
+            <div class="card-body">
+                {% if recommendations %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Project Type</th>
+                                    <th>Priority</th>
+                                    <th>Progress</th>
+                                    <th>Primary Recommendations</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rec in recommendations %}
+                                    <tr>
+                                        <td>{{ rec.timestamp }}</td>
+                                        <td>{{ rec.project_type }}</td>
+                                        <td>
+                                            <span class="badge {% if rec.priority == 'High' %}bg-danger{% elif rec.priority == 'Medium' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %}">
+                                                {{ rec.priority }}
+                                            </span>
+                                        </td>
+                                        <td>{{ (rec.progress * 100)|round }}%</td>
+                                        <td>
+                                            {% if rec.recommendations.primary_recommendations %}
+                                                {% for member in rec.recommendations.primary_recommendations %}
+                                                    <span class="badge bg-light text-dark">{{ member.name }}</span>
+                                                {% endfor %}
+                                            {% else %}
+                                                <span class="text-muted">None</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#recommendationModal{{ rec.id }}">
+                                                View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Recommendation Detail Modals -->
+                    {% for rec in recommendations %}
+                        <div class="modal fade" id="recommendationModal{{ rec.id }}" tabindex="-1" aria-labelledby="recommendationModalLabel{{ rec.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="recommendationModalLabel{{ rec.id }}">Recommendation Details</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <h6>Project Information</h6>
+                                                <ul class="list-group">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Project Type
+                                                        <span class="badge bg-primary rounded-pill">{{ rec.project_type }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Priority
+                                                        <span class="badge {% if rec.priority == 'High' %}bg-danger{% elif rec.priority == 'Medium' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} rounded-pill">{{ rec.priority }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Hours Spent
+                                                        <span class="badge bg-secondary rounded-pill">{{ rec.hours_spent }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Progress
+                                                        <span class="badge bg-success rounded-pill">{{ (rec.progress * 100)|round }}%</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Remaining Work
+                                                        <span class="badge bg-warning text-dark rounded-pill">{{ (rec.recommendations.remaining_work * 100)|round }}%</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Required Skills
+                                                        <span>
+                                                            {% for skill in rec.recommendations.required_skills %}
+                                                                <span class="badge bg-info text-dark">{{ skill }}</span>
+                                                            {% endfor %}
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6>Recommendation Date</h6>
+                                                <p>{{ rec.timestamp }}</p>
+                                                
+                                                {% if rec.recommendations.model_enhanced %}
+                                                    <div class="alert alert-success">
+                                                        <i class="bi bi-robot"></i> Enhanced by ML model
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <h6>Primary Recommendations</h6>
+                                        <div class="row">
+                                            {% for member in rec.recommendations.primary_recommendations %}
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="card h-100 {% if member.workload < 0.4 %}border-success{% elif member.workload < 0.7 %}border-warning{% else %}border-danger{% endif %}">
+                                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                                            <h6 class="mb-0">{{ member.name }}</h6>
+                                                            <span class="badge {% if member.workload < 0.4 %}bg-success{% elif member.workload < 0.7 %}bg-warning{% else %}bg-danger{% endif %}">
+                                                                {{ (member.workload * 100)|round }}% workload
+                                                            </span>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <p><strong>Skills:</strong> {{ member.skills|join(', ') }}</p>
+                                                            <p><strong>Experience:</strong> {{ member.experience }} years</p>
+                                                            <p><strong>Suitability Score:</strong> {{ (member.score * 100)|round }}%</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        
+                                        {% if rec.recommendations.backup_recommendations %}
+                                            <h6 class="mt-3">Backup Recommendations</h6>
+                                            <div class="row">
+                                                {% for member in rec.recommendations.backup_recommendations %}
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="card h-100 {% if member.workload < 0.4 %}border-success{% elif member.workload < 0.7 %}border-warning{% else %}border-danger{% endif %}">
+                                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                                <h6 class="mb-0">{{ member.name }}</h6>
+                                                                <span class="badge {% if member.workload < 0.4 %}bg-success{% elif member.workload < 0.7 %}bg-warning{% else %}bg-danger{% endif %}">
+                                                                    {{ (member.workload * 100)|round }}% workload
+                                                                </span>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p><strong>Skills:</strong> {{ member.skills|join(', ') }}</p>
+                                                                <p><strong>Experience:</strong> {{ member.experience }} years</p>
+                                                                <p><strong>Suitability Score:</strong> {{ (member.score * 100)|round }}%</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">No recommendations yet</h5>
+                        <p>You haven't generated any team recommendations yet. Go to the recommendation page to get your first team recommendation.</p>
+                        <hr>
+                        <a href="{{ url_for('recommend') }}" class="btn btn-info">Get Team Recommendations</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                <a href="{{ url_for('recommend') }}" class="btn btn-info float-end">Get New Recommendations</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

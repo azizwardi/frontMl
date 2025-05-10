@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Make Prediction - Project Delay Prediction{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Project Delay Prediction</h4>
+            </div>
+            <div class="card-body">
+                {% if prediction is defined %}
+                    <div class="alert {% if prediction == 'Delayed' %}alert-danger{% else %}alert-success{% endif %} mb-4">
+                        <h4 class="alert-heading">Prediction Result</h4>
+                        <p class="mb-0">Based on the provided information, your project is predicted to be: <strong>{{ prediction }}</strong></p>
+                        {% if probability is defined and probability is not none %}
+                            <hr>
+                            <p class="mb-0">
+                                <strong>Delay Risk: {{ (probability * 100) | round(1) }}%</strong>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar {% if probability > 0.5 %}bg-danger{% elif probability > 0.25 %}bg-warning{% else %}bg-success{% endif %}"
+                                         role="progressbar"
+                                         style="width: {{ (probability * 100) | round(1) }}%"
+                                         aria-valuenow="{{ (probability * 100) | round(1) }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                        {{ (probability * 100) | round(1) }}%
+                                    </div>
+                                </div>
+                                <small class="text-muted mt-1 d-block">
+                                    {% if probability < 0.25 %}
+                                        Low risk of delay
+                                    {% elif probability < 0.5 %}
+                                        Medium risk of delay
+                                    {% elif probability < 0.75 %}
+                                        High risk of delay
+                                    {% else %}
+                                        Very high risk of delay
+                                    {% endif %}
+                                </small>
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <h5>Input Data:</h5>
+                    <table class="table table-bordered">
+                        <tbody>
+                            {% for key, value in input_data.items() %}
+                            <tr>
+                                <th>{{ key }}</th>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="mt-3">
+                        <a href="{{ url_for('prediction') }}" class="btn btn-primary">Make Another Prediction</a>
+                    </div>
+                {% else %}
+                    <h5 class="card-title">Enter Project Details</h5>
+                    <p class="card-text">Fill in the form below to predict if your project will be delayed.</p>
+
+                    <form method="POST" action="{{ url_for('prediction') }}">
+                        <div class="mb-3">
+                            <label for="project_type" class="form-label">Project Type</label>
+                            <select class="form-select" id="project_type" name="project_type" required>
+                                <option value="" selected disabled>Select Project Type</option>
+                                <option value="Renovation">Renovation</option>
+                                <option value="Construction">Construction</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Innovation">Innovation</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority" name="priority" required>
+                                <option value="" selected disabled>Select Priority</option>
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label for="hours_spent" class="form-label">Hours Spent</label>
+                            <input type="number" class="form-control" id="hours_spent" name="hours_spent" min="0" max="100" step="1" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="progress" class="form-label">Progress (0.0 to 1.0)</label>
+                            <input type="number" class="form-control" id="progress" name="progress" min="0" max="1" step="0.01" required>
+                            <div class="form-text">Enter a value between 0 (0%) and 1 (100%)</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Make Prediction</button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
