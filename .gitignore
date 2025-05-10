@@ -27,8 +27,6 @@ ENV/
 # Database
 db.json
 
-# Models
-models/*.pkl
 
 # Flask
 instance/
