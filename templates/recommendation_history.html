@@ -53,10 +53,10 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <!-- Recommendation Detail Modals -->
                     {% for rec in recommendations %}
-                        <div class="modal fade" id="recommendationModal{{ rec.id }}" tabindex="-1" aria-labelledby="recommendationModalLabel{{ rec.id }}" aria-hidden="true">
+                        <div class="modal" id="recommendationModal{{ rec.id }}" tabindex="-1" aria-labelledby="recommendationModalLabel{{ rec.id }}" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -101,7 +101,7 @@
                                             <div class="col-md-6">
                                                 <h6>Recommendation Date</h6>
                                                 <p>{{ rec.timestamp }}</p>
-                                                
+
                                                 {% if rec.recommendations.model_enhanced %}
                                                     <div class="alert alert-success">
                                                         <i class="bi bi-robot"></i> Enhanced by ML model
@@ -109,7 +109,7 @@
                                                 {% endif %}
                                             </div>
                                         </div>
-                                        
+
                                         <h6>Primary Recommendations</h6>
                                         <div class="row">
                                             {% for member in rec.recommendations.primary_recommendations %}
@@ -130,7 +130,7 @@
                                                 </div>
                                             {% endfor %}
                                         </div>
-                                        
+
                                         {% if rec.recommendations.backup_recommendations %}
                                             <h6 class="mt-3">Backup Recommendations</h6>
                                             <div class="row">

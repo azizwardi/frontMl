@@ -1,0 +1,90 @@
+/* Remove all animations and transitions */
+
+/* General transition removal */
+* {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Remove card hover effects */
+.card {
+    transition: none !important;
+}
+
+.card:hover {
+    box-shadow: var(--card-shadow) !important;
+    transform: none !important;
+}
+
+/* Remove button hover effects */
+.btn:hover {
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.btn-primary:hover,
+.btn-info:hover,
+.btn-warning:hover,
+.btn-success:hover,
+.btn-outline-primary:hover,
+.btn-outline-info:hover,
+.btn-outline-warning:hover,
+.btn-outline-success:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove dashboard card hover effects */
+.dashboard-card:hover {
+    transform: none !important;
+}
+
+/* Remove feature icon transitions */
+.feature-icon {
+    transition: none !important;
+}
+
+/* Modal specific overrides */
+.modal {
+    transition: none !important;
+}
+
+.modal.fade {
+    transition: none !important;
+    opacity: 1 !important;
+}
+
+.modal.fade .modal-dialog {
+    transition: none !important;
+    transform: none !important;
+}
+
+.modal-backdrop.fade {
+    transition: none !important;
+    opacity: 0.5 !important;
+}
+
+/* Ensure modals appear instantly */
+.modal.show .modal-dialog {
+    transform: none !important;
+}
+
+/* Override Bootstrap's fade class */
+.fade {
+    transition: none !important;
+    opacity: 1;
+}
+
+/* Override any navbar transitions */
+.navbar-nav .nav-link {
+    transition: none !important;
+}
+
+.navbar-nav .dropdown-item {
+    transition: none !important;
+}
+
+/* Form control transitions */
+.form-control, .form-select {
+    transition: none !important;
+}
