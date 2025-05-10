@@ -30,6 +30,7 @@ pip install -r requirements.txt
 4. Ensure model files are in the `models/` directory:
    - `predicmodel.pkl` - For delay prediction
    - `Recommendmodel.pkl` - For team recommendations
+   - `Segmentmodel.pkl` - For task prioritization
 
 ## Usage
 
@@ -47,6 +48,7 @@ python app.py
 ## Project Structure
 
 - `app.py` - Main Flask application
+- `prediction.py` - Project delay prediction logic
 - `recommendation.py` - Team recommendation logic
 - `segmentation.py` - Task prioritization logic
 - `templates/` - HTML templates for the web interface
