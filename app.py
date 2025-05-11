@@ -119,7 +119,76 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', username=session.get('username'))
+    user_id = session.get('user_id')
+    db = get_db()
+
+    # Initialize stats
+    stats = {
+        'total_predictions': 0,
+        'total_recommendations': 0,
+        'total_segmentations': 0,
+        'recent_activities': [],
+        'delayed_projects_count': 0,
+        'on_track_projects_count': 0,
+        'critical_tasks_count': 0
+    }
+
+    # Find the user and get their data
+    for user in db['users']:
+        if user['id'] == user_id:
+            # Get counts
+            predictions = user.get('predictions', [])
+            recommendations = user.get('recommendations', [])
+            segmentations = user.get('segmentations', [])
+
+            stats['total_predictions'] = len(predictions)
+            stats['total_recommendations'] = len(recommendations)
+            stats['total_segmentations'] = len(segmentations)
+
+            # Count delayed vs on-track projects
+            for pred in predictions:
+                if pred.get('result') == 'Delayed':
+                    stats['delayed_projects_count'] += 1
+                else:
+                    stats['on_track_projects_count'] += 1
+
+            # Count critical tasks
+            for seg in segmentations:
+                if seg.get('segmentation', {}).get('segment') == 'Critical Priority':
+                    stats['critical_tasks_count'] += 1
+
+            # Get recent activities (5 most recent of any type)
+            all_activities = []
+
+            for pred in predictions:
+                all_activities.append({
+                    'type': 'prediction',
+                    'timestamp': pred.get('timestamp'),
+                    'details': f"Project prediction: {pred.get('result')}",
+                    'result': pred.get('result')
+                })
+
+            for rec in recommendations:
+                all_activities.append({
+                    'type': 'recommendation',
+                    'timestamp': rec.get('timestamp'),
+                    'details': f"Team recommendation for {rec.get('project_type')} project"
+                })
+
+            for seg in segmentations:
+                all_activities.append({
+                    'type': 'segmentation',
+                    'timestamp': seg.get('timestamp'),
+                    'details': f"Task prioritization: {seg.get('task_name')} - {seg.get('segmentation', {}).get('segment')}"
+                })
+
+            # Sort by timestamp and get 5 most recent
+            all_activities = sorted(all_activities, key=lambda x: x.get('timestamp', ''), reverse=True)
+            stats['recent_activities'] = all_activities[:5]
+
+            break
+
+    return render_template('dashboard.html', username=session.get('username'), stats=stats)
 
 @app.route('/prediction', methods=['GET', 'POST'])
 @login_required

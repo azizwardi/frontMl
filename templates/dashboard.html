@@ -3,110 +3,321 @@
 {% block title %}Dashboard - Project Delay Prediction{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Welcome, {{ username }}!</h4>
+<div class="container py-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card welcome-card text-white">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="mb-0">Welcome, {{ username }}!</h2>
+                        <p class="mb-0 opacity-75">Your project management dashboard</p>
+                    </div>
+                    <div class="text-end">
+                        <p class="mb-0">{{ stats.recent_activities[0].timestamp if stats.recent_activities else 'No recent activity' }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title">Your Dashboard</h5>
-                <p class="card-text">From here you can access all the features of the Project Delay Prediction tool.</p>
+        </div>
+    </div>
 
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Make a Prediction</h5>
-                                <p class="card-text">Predict if your project will be delayed based on its characteristics.</p>
-                                <a href="{{ url_for('prediction') }}" class="btn btn-primary">Go to Prediction</a>
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-graph-up-arrow text-primary dashboard-icon"></i>
+                    <h3 class="mt-2">{{ stats.total_predictions }}</h3>
+                    <p class="text-muted mb-0">Total Predictions</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-people text-info dashboard-icon"></i>
+                    <h3 class="mt-2">{{ stats.total_recommendations }}</h3>
+                    <p class="text-muted mb-0">Team Recommendations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-list-check text-warning dashboard-icon"></i>
+                    <h3 class="mt-2">{{ stats.total_segmentations }}</h3>
+                    <p class="text-muted mb-0">Task Prioritizations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-exclamation-triangle text-danger dashboard-icon"></i>
+                    <h3 class="mt-2">{{ stats.critical_tasks_count }}</h3>
+                    <p class="text-muted mb-0">Critical Tasks</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Status -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Project Status Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <div class="status-indicator status-indicator-success mb-2">
+                                <h4 class="text-success">{{ stats.on_track_projects_count }}</h4>
+                                <p class="mb-0">On Track</p>
+                            </div>
+                        </div>
+                        <div class="col-6 text-center">
+                            <div class="status-indicator status-indicator-danger mb-2">
+                                <h4 class="text-danger">{{ stats.delayed_projects_count }}</h4>
+                                <p class="mb-0">Delayed</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Prediction History</h5>
-                                <p class="card-text">View your past predictions and their results.</p>
-                                <a href="{{ url_for('history') }}" class="btn btn-success">View History</a>
+                    {% set total_projects = stats.on_track_projects_count + stats.delayed_projects_count %}
+                    {% set on_track_percent = (stats.on_track_projects_count / total_projects * 100) if total_projects > 0 else 0 %}
+                    {% set delayed_percent = (stats.delayed_projects_count / total_projects * 100) if total_projects > 0 else 0 %}
+                    <div class="progress mt-3 progress-tall">
+                        {% if on_track_percent > 0 %}
+                        <div class="progress-bar bg-success" role="progressbar"
+                             aria-label="On track projects"
+                             style="width: {{ on_track_percent }}%"
+                             aria-valuenow="{{ on_track_percent|round|int }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             title="On track: {{ stats.on_track_projects_count }} projects">
+                             {% if on_track_percent > 15 %}{{ stats.on_track_projects_count }} On Track{% endif %}
+                        </div>
+                        {% endif %}
+                        {% if delayed_percent > 0 %}
+                        <div class="progress-bar bg-danger" role="progressbar"
+                             aria-label="Delayed projects"
+                             style="width: {{ delayed_percent }}%"
+                             aria-valuenow="{{ delayed_percent|round|int }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             title="Delayed: {{ stats.delayed_projects_count }} projects">
+                             {% if delayed_percent > 15 %}{{ stats.delayed_projects_count }} Delayed{% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{{ url_for('prediction') }}" class="btn btn-primary">New Prediction</a>
+                        <a href="{{ url_for('history') }}" class="btn btn-outline-secondary">View History</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush activity-list">
+                        {% if stats.recent_activities %}
+                            {% for activity in stats.recent_activities %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">
+                                            {% if activity.type == 'prediction' %}
+                                                <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+                                            {% elif activity.type == 'recommendation' %}
+                                                <i class="bi bi-people text-info me-2"></i>
+                                            {% elif activity.type == 'segmentation' %}
+                                                <i class="bi bi-list-check text-warning me-2"></i>
+                                            {% endif %}
+                                            {{ activity.details }}
+                                        </h6>
+                                        <small>{{ activity.timestamp }}</small>
+                                    </div>
+                                    {% if activity.type == 'prediction' and activity.result %}
+                                        <span class="badge bg-{{ 'danger' if activity.result == 'Delayed' else 'success' }}">{{ activity.result }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="list-group-item text-center py-4">
+                                <p class="mb-0 text-muted">No recent activity</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Features -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Main Features</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Project Prediction -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-primary border-top-0 border-end-0 border-bottom-0 border-3">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                            <i class="bi bi-graph-up-arrow text-primary"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Project Prediction</h5>
+                                    </div>
+                                    <p class="card-text">Predict if your project will be delayed based on its characteristics.</p>
+                                    <a href="{{ url_for('prediction') }}" class="btn btn-primary">Make Prediction</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Team Recommendations</h5>
-                                <p class="card-text">Get team workload optimization recommendations for your project.</p>
-                                <a href="{{ url_for('recommend') }}" class="btn btn-info">Get Recommendations</a>
+
+                        <!-- Team Recommendations -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-info border-top-0 border-end-0 border-bottom-0 border-3">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                                            <i class="bi bi-people text-info"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Team Recommendations</h5>
+                                    </div>
+                                    <p class="card-text">Get team workload optimization recommendations for your project.</p>
+                                    <a href="{{ url_for('recommend') }}" class="btn btn-info">Get Recommendations</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Task Prioritization -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 border-warning border-top-0 border-end-0 border-bottom-0 border-3">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                                            <i class="bi bi-list-check text-warning"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Task Prioritization</h5>
+                                    </div>
+                                    <p class="card-text">Prioritize your tasks based on urgency and importance.</p>
+                                    <a href="{{ url_for('segment') }}" class="btn btn-warning">Prioritize Tasks</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="row mt-2">
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Task Prioritization</h5>
-                                <p class="card-text">Prioritize your tasks based on urgency and importance.</p>
-                                <a href="{{ url_for('segment') }}" class="btn btn-warning">Prioritize Tasks</a>
+    <!-- History & Reports -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">History & Reports</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-clock-history text-secondary mb-3 dashboard-icon"></i>
+                                    <h5>Prediction History</h5>
+                                    <p class="text-muted">View your past predictions and their results.</p>
+                                    <a href="{{ url_for('history') }}" class="btn btn-outline-primary">View History</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Recommendation History</h5>
-                                <p class="card-text">View your past team recommendations.</p>
-                                <a href="{{ url_for('recommendation_history') }}" class="btn btn-secondary">View History</a>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-file-earmark-bar-graph text-secondary mb-3 dashboard-icon"></i>
+                                    <h5>Recommendation History</h5>
+                                    <p class="text-muted">View your past team recommendations.</p>
+                                    <a href="{{ url_for('recommendation_history') }}" class="btn btn-outline-primary">View History</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Prioritization History</h5>
-                                <p class="card-text">View your past task prioritizations.</p>
-                                <a href="{{ url_for('segmentation_history') }}" class="btn btn-secondary">View History</a>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-kanban text-secondary mb-3 dashboard-icon"></i>
+                                    <h5>Prioritization History</h5>
+                                    <p class="text-muted">View your past task prioritizations.</p>
+                                    <a href="{{ url_for('segmentation_history') }}" class="btn btn-outline-primary">View History</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">About Our Models</h5>
-                                <p class="card-text">Our platform uses three advanced models:</p>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <h6>Delay Prediction Model</h6>
-                                        <ul>
-                                            <li>Project Type</li>
-                                            <li>Priority</li>
-                                            <li>Hours Spent</li>
-                                            <li>Progress Percentage</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h6>Team Workload Optimization</h6>
-                                        <ul>
-                                            <li>Team Member Skills</li>
-                                            <li>Current Workload</li>
-                                            <li>Project Requirements</li>
-                                            <li>Experience Level</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h6>Task Prioritization</h6>
-                                        <ul>
-                                            <li>Task Category</li>
-                                            <li>Current Priority</li>
-                                            <li>Deadline</li>
-                                            <li>Estimated Hours</li>
-                                            <li>Complexity</li>
-                                        </ul>
-                                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Our Models -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">About Our Models</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card h-100 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">
+                                        <i class="bi bi-graph-up-arrow me-2"></i>
+                                        Delay Prediction Model
+                                    </h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item bg-transparent">Project Type</li>
+                                        <li class="list-group-item bg-transparent">Priority</li>
+                                        <li class="list-group-item bg-transparent">Hours Spent</li>
+                                        <li class="list-group-item bg-transparent">Progress Percentage</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title text-info">
+                                        <i class="bi bi-people me-2"></i>
+                                        Team Workload Optimization
+                                    </h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item bg-transparent">Team Member Skills</li>
+                                        <li class="list-group-item bg-transparent">Current Workload</li>
+                                        <li class="list-group-item bg-transparent">Project Requirements</li>
+                                        <li class="list-group-item bg-transparent">Experience Level</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning">
+                                        <i class="bi bi-list-check me-2"></i>
+                                        Task Prioritization
+                                    </h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item bg-transparent">Task Category</li>
+                                        <li class="list-group-item bg-transparent">Current Priority</li>
+                                        <li class="list-group-item bg-transparent">Deadline</li>
+                                        <li class="list-group-item bg-transparent">Estimated Hours</li>
+                                        <li class="list-group-item bg-transparent">Complexity</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

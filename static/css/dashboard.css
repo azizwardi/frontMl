@@ -1,0 +1,77 @@
+/* Dashboard specific styles */
+
+/* Icon sizes */
+.dashboard-icon {
+    font-size: 2rem;
+}
+
+/* Progress bar height */
+.progress-tall {
+    height: 20px;
+}
+
+/* Card hover effects */
+.feature-card {
+    transition: transform 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Stats cards */
+.stats-card {
+    border-radius: var(--border-radius);
+    transition: all 0.2s;
+}
+
+.stats-card:hover {
+    box-shadow: var(--hover-shadow);
+}
+
+/* Feature icons */
+.feature-icon-circle {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Recent activity list */
+.activity-list .list-group-item {
+    transition: background-color 0.2s;
+}
+
+.activity-list .list-group-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Model cards */
+.model-card {
+    transition: all 0.2s;
+}
+
+.model-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Welcome card */
+.welcome-card {
+    background: var(--primary-gradient);
+}
+
+/* Status indicators */
+.status-indicator {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.status-indicator-success {
+    background-color: rgba(32, 191, 85, 0.1);
+}
+
+.status-indicator-danger {
+    background-color: rgba(255, 78, 80, 0.1);
+}

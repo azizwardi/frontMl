@@ -9,8 +9,8 @@
     --light-color: #f8f9fa;
     --success-color: #20bf55;
     --success-gradient: linear-gradient(to right, #20bf55 0%, #01baef 100%);
-    --warning-color: #f9d423;
-    --warning-gradient: linear-gradient(to right, #f9d423 0%, #ff4e50 100%);
+    --warning-color: #e6c86e;
+    --warning-gradient: linear-gradient(to right, #e6c86e 0%, #e67e7e 100%);
     --info-color: #0093E9;
     --info-gradient: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
     --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -229,7 +229,7 @@ footer {
 }
 
 .btn-warning:hover {
-    box-shadow: 0 5px 15px rgba(249, 212, 35, 0.4);
+    box-shadow: 0 5px 15px rgba(230, 200, 110, 0.4);
     transform: translateY(-2px);
 }
 
@@ -270,7 +270,7 @@ footer {
 }
 
 .alert-warning {
-    background: linear-gradient(to right, rgba(249, 212, 35, 0.1), rgba(255, 78, 80, 0.1));
+    background: linear-gradient(to right, rgba(230, 200, 110, 0.1), rgba(230, 126, 126, 0.1));
     border-left: 4px solid var(--warning-color);
 }
 
