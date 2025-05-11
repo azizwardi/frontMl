@@ -12,8 +12,8 @@ A Flask-based web application that uses machine learning to help with project ma
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/project-management-ai.git
-cd project-management-ai
+git clone https://github.com/azizwardi/frontMl.git
+cd frontMl
 ```
 
 2. Create and activate a virtual environment:
