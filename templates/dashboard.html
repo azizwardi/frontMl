@@ -156,67 +156,6 @@
         </div>
     </div>
 
-    <!-- Main Features -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Main Features</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Project Prediction -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 border-primary border-top-0 border-end-0 border-bottom-0 border-3">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
-                                            <i class="bi bi-graph-up-arrow text-primary"></i>
-                                        </div>
-                                        <h5 class="card-title mb-0">Project Prediction</h5>
-                                    </div>
-                                    <p class="card-text">Predict if your project will be delayed based on its characteristics.</p>
-                                    <a href="{{ url_for('prediction') }}" class="btn btn-primary">Make Prediction</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Team Recommendations -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 border-info border-top-0 border-end-0 border-bottom-0 border-3">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
-                                            <i class="bi bi-people text-info"></i>
-                                        </div>
-                                        <h5 class="card-title mb-0">Team Recommendations</h5>
-                                    </div>
-                                    <p class="card-text">Get team workload optimization recommendations for your project.</p>
-                                    <a href="{{ url_for('recommend') }}" class="btn btn-info">Get Recommendations</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Task Prioritization -->
-                        <div class="col-md-4 mb-4">
-                            <div class="card h-100 border-warning border-top-0 border-end-0 border-bottom-0 border-3">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
-                                            <i class="bi bi-list-check text-warning"></i>
-                                        </div>
-                                        <h5 class="card-title mb-0">Task Prioritization</h5>
-                                    </div>
-                                    <p class="card-text">Prioritize your tasks based on urgency and importance.</p>
-                                    <a href="{{ url_for('segment') }}" class="btn btn-warning">Prioritize Tasks</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- History & Reports -->
     <div class="row mb-4">
@@ -254,70 +193,6 @@
                                     <h5>Prioritization History</h5>
                                     <p class="text-muted">View your past task prioritizations.</p>
                                     <a href="{{ url_for('segmentation_history') }}" class="btn btn-outline-primary">View History</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- About Our Models -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">About Our Models</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card h-100 bg-light">
-                                <div class="card-body">
-                                    <h5 class="card-title text-primary">
-                                        <i class="bi bi-graph-up-arrow me-2"></i>
-                                        Delay Prediction Model
-                                    </h5>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item bg-transparent">Project Type</li>
-                                        <li class="list-group-item bg-transparent">Priority</li>
-                                        <li class="list-group-item bg-transparent">Hours Spent</li>
-                                        <li class="list-group-item bg-transparent">Progress Percentage</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 bg-light">
-                                <div class="card-body">
-                                    <h5 class="card-title text-info">
-                                        <i class="bi bi-people me-2"></i>
-                                        Team Workload Optimization
-                                    </h5>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item bg-transparent">Team Member Skills</li>
-                                        <li class="list-group-item bg-transparent">Current Workload</li>
-                                        <li class="list-group-item bg-transparent">Project Requirements</li>
-                                        <li class="list-group-item bg-transparent">Experience Level</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 bg-light">
-                                <div class="card-body">
-                                    <h5 class="card-title text-warning">
-                                        <i class="bi bi-list-check me-2"></i>
-                                        Task Prioritization
-                                    </h5>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item bg-transparent">Task Category</li>
-                                        <li class="list-group-item bg-transparent">Current Priority</li>
-                                        <li class="list-group-item bg-transparent">Deadline</li>
-                                        <li class="list-group-item bg-transparent">Estimated Hours</li>
-                                        <li class="list-group-item bg-transparent">Complexity</li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
